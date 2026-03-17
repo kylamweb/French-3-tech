@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quel est ton profil numérique?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Syne:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+–bg: #f5f0e8;
+–surface: #ffffff;
+–ink: #1c1814;
+–muted: #9a9490;
+–border: #e0d9ce;
+–accent: #c84b2f;
+–accent-light: rgba(200,75,47,0.08);
+–freq-1: #3d5a80;
+–freq-2: #6b8cae;
+–freq-3: #e9a825;
+–freq-4: #d4732a;
+–freq-5: #c84b2f;
+}
+
+body {
+background: var(–bg);
+color: var(–ink);
+font-family: ‘Syne’, sans-serif;
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 24px;
+position: relative;
+}
+
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background:
+radial-gradient(ellipse 60% 40% at 10% 20%, rgba(200,75,47,0.07) 0%, transparent 60%),
+radial-gradient(ellipse 50% 50% at 90% 80%, rgba(61,90,128,0.07) 0%, transparent 60%),
+radial-gradient(ellipse 40% 60% at 50% 50%, rgba(233,168,37,0.04) 0%, transparent 70%);
+pointer-events: none;
+z-index: 0;
+}
+
+.container {
+width: 100%;
+max-width: 640px;
+position: relative;
+z-index: 1;
+}
+
+/* –– SCREENS –– */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(18px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* –– CARD –– */
+.card {
+background: var(–surface);
+border: 1px solid var(–border);
+padding: 44px 48px;
+box-shadow: 0 2px 40px rgba(28,24,20,0.07);
+}
+
+@media (max-width: 520px) {
+.card { padding: 32px 24px; }
+}
+
+/* –– INTRO –– */
+.intro-eyebrow {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 20px;
+}
+
+.intro-title {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2.2rem, 7vw, 3.4rem);
+line-height: 1.1;
+margin-bottom: 20px;
+color: var(–ink);
+}
+
+.intro-title em {
+font-style: italic;
+color: var(–accent);
+}
+
+.intro-body {
+font-size: 0.95rem;
+line-height: 1.75;
+color: #5a5550;
+font-weight: 400;
+margin-bottom: 32px;
+}
+
+.intro-pills {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-bottom: 36px;
+}
+
+.pill {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 1px;
+padding: 6px 14px;
+border: 1.5px solid var(–border);
+color: var(–muted);
+}
+
+.btn-start {
+background: var(–ink);
+color: var(–bg);
+border: none;
+font-family: ‘Syne’, sans-serif;
+font-weight: 700;
+font-size: 14px;
+letter-spacing: 1px;
+padding: 16px 36px;
+cursor: pointer;
+transition: all 0.18s;
+text-transform: uppercase;
+}
+
+.btn-start:hover { background: var(–accent); transform: translateY(-2px); }
+
+/* –– PROGRESS –– */
+.progress-wrap {
+margin-bottom: 32px;
+}
+
+.progress-track {
+height: 2px;
+background: var(–border);
+margin-bottom: 8px;
+overflow: hidden;
+}
+
+.progress-fill {
+height: 100%;
+background: var(–accent);
+transition: width 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+
+.progress-label {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 2px;
+color: var(–muted);
+text-transform: uppercase;
+}
+
+/* –– QUESTION –– */
+.q-type {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: var(–accent);
+margin-bottom: 14px;
+}
+
+.q-text {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(1.3rem, 4vw, 1.75rem);
+line-height: 1.3;
+color: var(–ink);
+margin-bottom: 32px;
+}
+
+/* –– CHOICE OPTIONS (phase 1) –– */
+.options-grid {
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-bottom: 32px;
+}
+
+.option-card {
+border: 1.5px solid var(–border);
+padding: 16px 20px;
+cursor: pointer;
+transition: all 0.15s;
+display: flex;
+align-items: center;
+gap: 16px;
+background: transparent;
+text-align: left;
+width: 100%;
+font-family: ‘Syne’, sans-serif;
+}
+
+.option-card:hover { border-color: var(–ink); background: rgba(28,24,20,0.02); }
+.option-card.selected { border-color: var(–accent); background: var(–accent-light); }
+
+.opt-letter {
+font-family: ‘DM Mono’, monospace;
+font-size: 11px;
+font-weight: 500;
+color: var(–muted);
+min-width: 16px;
+flex-shrink: 0;
+}
+
+.option-card.selected .opt-letter { color: var(–accent); }
+
+.opt-text {
+font-size: 0.93rem;
+font-weight: 600;
+line-height: 1.4;
+color: var(–ink);
+}
+
+/* –– FREQUENCY SCALE –– */
+.freq-statement {
+margin-bottom: 28px;
+padding-bottom: 28px;
+border-bottom: 1px solid var(–border);
+}
+
+.freq-statement:last-child {
+border-bottom: none;
+margin-bottom: 0;
+padding-bottom: 0;
+}
+
+.freq-label {
+font-size: 0.95rem;
+font-weight: 600;
+line-height: 1.5;
+color: var(–ink);
+margin-bottom: 14px;
+}
+
+.freq-scale {
+display: flex;
+gap: 6px;
+}
+
+.freq-btn {
+flex: 1;
+border: 1.5px solid var(–border);
+background: transparent;
+padding: 10px 4px 8px;
+cursor: pointer;
+transition: all 0.15s;
+font-family: ‘DM Mono’, monospace;
+font-size: 9px;
+letter-spacing: 0.5px;
+color: var(–muted);
+text-align: center;
+line-height: 1.3;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 4px;
+}
+
+.freq-btn .freq-num {
+font-size: 13px;
+font-weight: 500;
+color: var(–ink);
+font-family: ‘Playfair Display’, serif;
+font-style: italic;
+}
+
+.freq-btn:hover { border-color: var(–ink); }
+.freq-btn.selected-1 { border-color: var(–freq-1); background: rgba(61,90,128,0.08); color: var(–freq-1); }
+.freq-btn.selected-1 .freq-num { color: var(–freq-1); }
+.freq-btn.selected-2 { border-color: var(–freq-2); background: rgba(107,140,174,0.08); color: var(–freq-2); }
+.freq-btn.selected-2 .freq-num { color: var(–freq-2); }
+.freq-btn.selected-3 { border-color: var(–freq-3); background: rgba(233,168,37,0.08); color: var(–freq-3); }
+.freq-btn.selected-3 .freq-num { color: var(–freq-3); }
+.freq-btn.selected-4 { border-color: var(–freq-4); background: rgba(212,115,42,0.08); color: var(–freq-4); }
+.freq-btn.selected-4 .freq-num { color: var(–freq-4); }
+.freq-btn.selected-5 { border-color: var(–freq-5); background: rgba(200,75,47,0.08); color: var(–freq-5); }
+.freq-btn.selected-5 .freq-num { color: var(–freq-5); }
+
+.freq-labels-row {
+display: flex;
+justify-content: space-between;
+margin-top: 6px;
+padding: 0 2px;
+}
+
+.freq-label-end {
+font-family: ‘DM Mono’, monospace;
+font-size: 9px;
+color: var(–muted);
+letter-spacing: 0.5px;
+}
+
+/* –– NAV –– */
+.q-nav {
+display: flex;
+justify-content: flex-end;
+padding-top: 8px;
+}
+
+.btn-next {
+background: var(–ink);
+color: var(–bg);
+border: none;
+font-family: ‘Syne’, sans-serif;
+font-weight: 700;
+font-size: 13px;
+letter-spacing: 1px;
+text-transform: uppercase;
+padding: 14px 32px;
+cursor: pointer;
+transition: all 0.18s;
+opacity: 0;
+pointer-events: none;
+}
+
+.btn-next.visible { opacity: 1; pointer-events: all; }
+.btn-next:hover { background: var(–accent); }
+
+/* –– RESULT –– */
+.result-eyebrow {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 12px;
+}
+
+.result-emoji {
+font-size: 64px;
+line-height: 1;
+margin-bottom: 16px;
+display: block;
+animation: popIn 0.5s cubic-bezier(0.36,0.07,0.19,0.97) both;
+}
+
+@keyframes popIn {
+from { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.result-name {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2rem, 6vw, 2.8rem);
+line-height: 1.1;
+margin-bottom: 20px;
+color: var(–ink);
+}
+
+.result-desc {
+font-size: 0.93rem;
+line-height: 1.8;
+color: #5a5550;
+font-weight: 400;
+margin-bottom: 28px;
+}
+
+.result-divider {
+height: 1px;
+background: var(–border);
+margin: 24px 0;
+}
+
+.traits-wrap {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-bottom: 28px;
+}
+
+.trait {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 0.5px;
+padding: 5px 12px;
+border: 1.5px solid var(–border);
+color: var(–ink);
+}
+
+/* –– GLOSSARY –– */
+.glossary-section {
+background: #faf7f0;
+border: 1px solid var(–border);
+padding: 24px;
+margin-bottom: 28px;
+}
+
+.glossary-title {
+font-family: ‘DM Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 18px;
+}
+
+.glossary-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+gap: 12px;
+}
+
+.glossary-item {
+padding-bottom: 12px;
+border-bottom: 1px solid var(–border);
+}
+
+.gloss-fr { font-weight: 700; font-size: 0.88rem; color: var(–ink); }
+.gloss-en { font-family: ‘DM Mono’, monospace; font-size: 10px; color: var(–muted); margin-top: 2px; }
+
+.result-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn-restart {
+background: var(–ink);
+color: var(–bg);
+border: none;
+font-family: ‘Syne’, sans-serif;
+font-weight: 700;
+font-size: 13px;
+letter-spacing: 1px;
+text-transform: uppercase;
+padding: 14px 32px;
+cursor: pointer;
+transition: all 0.18s;
+}
+.btn-restart:hover { background: var(–accent); }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- INTRO -->
+
+<div class="screen active" id="screen-intro">
+  <div class="card">
+    <div class="intro-eyebrow">French 3 · La Technologie</div>
+    <h1 class="intro-title">Quel est ton <em>profil</em> numérique?</h1>
+    <p class="intro-body">Réponds honnêtement — il n'y a pas de bonnes ou mauvaises réponses. Tu vas découvrir comment et pourquoi tu utilises la technologie.</p>
+    <div class="intro-pills">
+      <span class="pill">🇫🇷 En français</span>
+      <span class="pill">⏱ ~5 minutes</span>
+      <span class="pill">11 profils possibles</span>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">Commencer →</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+
+<div class="screen" id="screen-quiz">
+  <div class="card">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel"></div>
+    </div>
+    <div class="q-type" id="qType"></div>
+    <div class="q-text" id="qText"></div>
+    <div id="questionBody"></div>
+    <div class="q-nav">
+      <button class="btn-next" id="btnNext" onclick="advance()">Continuer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+
+<div class="screen" id="screen-result">
+  <div class="card" id="resultCard"></div>
+</div>
+
+</div>
+
+<script>
+// ---- DATA ----
+
+const FREQ_LABELS = ['Jamais', 'Rarement', 'Parfois', 'Souvent', 'Toujours'];
+
+const PERSONAS = {
+  connecteur: {
+    emoji: '💬',
+    name: 'Le / La Connecteur(se)',
+    bucket: 'A',
+    desc: 'Pour toi, la technologie sert à rester proche des autres. Tu envoies des textos, tu vérifies que tes amis vont bien, tu fais partie de leur vie numérique. Tu n\'as pas besoin d\'afficher tout en ligne pour te sentir connecté(e). Une vraie conversation vaut plus qu\'un million de vues.',
+    traits: ['empathique', 'loyal(e)', 'attentionné(e)', 'présent(e)'],
+    glossary: [
+      { fr: 'envoyer un texto', en: 'to text' },
+      { fr: 'faire partie de', en: 'to be part of' },
+      { fr: 'en ligne', en: 'online' },
+      { fr: 'se servir de', en: 'to use' },
+      { fr: 'fiable', en: 'reliable' },
+      { fr: 'les réseaux sociaux', en: 'social media' }
+    ]
+  },
+  reseauteur: {
+    emoji: '📲',
+    name: 'Le / La Réseauteur(se)',
+    bucket: 'A',
+    desc: 'Les réseaux sociaux sont ton territoire naturel. Tu affiches ton profil avec intention, tu suis les tendances, et tu sais exactement quoi poster et quand. Pour toi, l\'image numérique est une vraie compétence — et tu la maîtrises.',
+    traits: ['stratégique', 'à la mode', 'ambitieux(se)', 'observateur(trice)'],
+    glossary: [
+      { fr: 'afficher', en: 'to display' },
+      { fr: 'poster', en: 'to post' },
+      { fr: 'les réseaux sociaux', en: 'social media' },
+      { fr: 'numérique', en: 'digital' },
+      { fr: 'faire défiler', en: 'to scroll through' },
+      { fr: 'en ligne', en: 'online' }
+    ]
+  },
+  diariste: {
+    emoji: '📓',
+    name: 'Le / La Diariste Numérique',
+    bucket: 'A',
+    desc: 'Ton téléphone est ton journal. Tu enregistres ta journée, tu documentes chaque moment important. Ce n\'est pas pour les likes — c\'est parce que capturer ta vie fait partie de la vivre. Tu crées une archive personnelle et authentique.',
+    traits: ['authentique', 'nostalgique', 'attentif(ve)', 'expressif(ve)'],
+    glossary: [
+      { fr: 'enregistrer', en: 'to record' },
+      { fr: 'numérique', en: 'digital' },
+      { fr: 'afficher', en: 'to display' },
+      { fr: 'poster', en: 'to post' },
+      { fr: 'appartenir à', en: 'to belong to' },
+      { fr: 'une façon', en: 'a way, a manner' }
+    ]
+  },
+  createur: {
+    emoji: '🎬',
+    name: 'Le / La Créateur(trice)',
+    bucket: 'B',
+    desc: 'Tu crées du contenu pour une audience. Vidéos, posts, projets numériques — tu consacres du temps à la qualité de ce que tu publies. La visibilité est importante pour toi. Tu veux être vu(e) et reconnu(e) pour ce que tu fais.',
+    traits: ['ambitieux(se)', 'créatif(ve)', 'persévérant(e)', 'charismatique'],
+    glossary: [
+      { fr: 'consacrer du temps à', en: 'to dedicate time to' },
+      { fr: 'poster', en: 'to post' },
+      { fr: 'afficher', en: 'to display' },
+      { fr: 'un écran', en: 'a screen' },
+      { fr: 'numérique', en: 'digital' },
+      { fr: 'télécharger', en: 'to download / upload' }
+    ]
+  },
+  artiste: {
+    emoji: '🎨',
+    name: 'L\'Artiste Numérique',
+    bucket: 'B',
+    desc: 'La technologie est ton atelier. Tu t\'exprimes à travers des images, des sons, ou des designs. Tu consacres du temps à perfectionner ton style. Le processus t\'intéresse plus que la notoriété. Tu crées parce que tu en as besoin.',
+    traits: ['créatif(ve)', 'sensible', 'patient(e)', 'perfectionniste'],
+    glossary: [
+      { fr: 's\'exprimer', en: 'to express oneself' },
+      { fr: 'consacrer du temps à', en: 'to dedicate time to' },
+      { fr: 'enregistrer', en: 'to record' },
+      { fr: 'puissant(e)', en: 'powerful' },
+      { fr: 'une façon', en: 'a way, a manner' },
+      { fr: 'télécharger', en: 'to download / upload' }
+    ]
+  },
+  engage: {
+    emoji: '📢',
+    name: 'L\'Engagé(e)',
+    bucket: 'C',
+    desc: 'Tu utilises internet pour t\'informer et t\'exprimer. Tu partages ton opinion sur des sujets importants, tu défends des causes qui font partie de tes valeurs. Pour toi, la technologie est un outil de changement. Chaque post peut faire une différence.',
+    traits: ['engagé(e)', 'informé(e)', 'courageux(se)', 'passionné(e)'],
+    glossary: [
+      { fr: 's\'exprimer', en: 'to express oneself' },
+      { fr: 'le droit', en: 'the right' },
+      { fr: 'faire partie de', en: 'to be part of' },
+      { fr: 'afficher', en: 'to display' },
+      { fr: 'poster', en: 'to post' },
+      { fr: 'en ligne', en: 'online' }
+    ]
+  },
+  geek: {
+    emoji: '💻',
+    name: 'Le / La Geek Technophile',
+    bucket: 'C',
+    desc: 'Tu es fasciné(e) par la technologie elle-même. Les innovations, les applis puissantes, les nouveaux outils numériques — tu veux tout comprendre en profondeur. Tu ne consommes pas seulement la technologie, tu la maîtrises.',
+    traits: ['analytique', 'curieux(se)', 'technique', 'avant-gardiste'],
+    glossary: [
+      { fr: 'télécharger', en: 'to download / upload' },
+      { fr: 'puissant(e)', en: 'powerful' },
+      { fr: 'fiable', en: 'reliable' },
+      { fr: 'numérique', en: 'digital' },
+      { fr: 'se servir de', en: 'to use' },
+      { fr: 'taper', en: 'to type' }
+    ]
+  },
+  evade: {
+    emoji: '🛋️',
+    name: 'L\'Évadé(e)',
+    bucket: 'D',
+    desc: 'La technologie est ta zone de décompression. Après une longue journée, tu te détends devant une série, tu écoutes de la musique, tu t\'évades. Le divertissement numérique t\'aide à presque oublier le quotidien. C\'est ton espace de respiration.',
+    traits: ['introverti(e)', 'rêveur(se)', 'sensible', 'indépendant(e)'],
+    glossary: [
+      { fr: 'se détendre', en: 'to relax' },
+      { fr: 'le divertissement', en: 'entertainment' },
+      { fr: 'presque', en: 'almost' },
+      { fr: 'un écran', en: 'a screen' },
+      { fr: 'faire défiler', en: 'to scroll through' },
+      { fr: 'supprimer', en: 'to delete' }
+    ]
+  },
+  joueur: {
+    emoji: '🎮',
+    name: 'Le / La Joueur(se)',
+    bucket: 'D',
+    desc: 'Le jeu vidéo est au centre de ta vie numérique. Tu joues en compétition ou en coopération, avec des amis en ligne ou seul(e). Pour toi, jouer n\'est pas juste une façon de se détendre — c\'est une passion sérieuse et un espace social important.',
+    traits: ['compétitif(ve)', 'concentré(e)', 'loyal(e)', 'stratégique'],
+    glossary: [
+      { fr: 'se détendre', en: 'to relax' },
+      { fr: 'une façon', en: 'a way, a manner' },
+      { fr: 'en ligne', en: 'online' },
+      { fr: 'le divertissement', en: 'entertainment' },
+      { fr: 'se servir de', en: 'to use' },
+      { fr: 'appartenir à', en: 'to belong to' }
+    ]
+  },
+  viral: {
+    emoji: '🔥',
+    name: 'Le / La Consommateur(trice) Viral(e)',
+    bucket: 'D',
+    desc: 'Tu es toujours le/la premier(ère) à envoyer le mème du moment. Tu fais défiler ton feed à la vitesse de la lumière et tu trouves les vidéos virales avant tout le monde. Tu n\'es pas fidèle à une plateforme — tu suis le buzz où il brûle.',
+    traits: ['réactif(ve)', 'spontané(e)', 'drôle', 'à la page'],
+    glossary: [
+      { fr: 'faire défiler', en: 'to scroll through' },
+      { fr: 'poster', en: 'to post' },
+      { fr: 'les réseaux sociaux', en: 'social media' },
+      { fr: 'le divertissement', en: 'entertainment' },
+      { fr: 'envoyer un texto', en: 'to text' },
+      { fr: 'presque', en: 'almost' }
+    ]
+  },
+  travailleur: {
+    emoji: '⚡',
+    name: 'Le / La Travailleur(se) Connecté(e)',
+    bucket: 'D',
+    desc: 'Pour toi, la technologie est avant tout un outil fiable de performance. Tu utilises des applis puissantes pour organiser, planifier, et atteindre tes objectifs. Tu te sers de chaque outil avec une intention claire — et tu le poses quand c\'est fait.',
+    traits: ['organisé(e)', 'efficace', 'discipliné(e)', 'ambitieux(se)'],
+    glossary: [
+      { fr: 'fiable', en: 'reliable' },
+      { fr: 'puissant(e)', en: 'powerful' },
+      { fr: 'se servir de', en: 'to use' },
+      { fr: 'taper', en: 'to type' },
+      { fr: 'télécharger', en: 'to download / upload' },
+      { fr: 'supprimer', en: 'to delete' }
+    ]
+  }
+};
+
+// ---- QUIZ FLOW ----
+// Phase 1: 2 multiple choice questions → bucket vote → branch
+// Phase 2: frequency statements → score → persona
+
+const PHASE1 = [
+  {
+    text: 'Le soir, ton écran sert surtout à...',
+    options: [
+      { text: 'Envoyer des textos et parler avec des gens', vote: 'A' },
+      { text: 'T\'exprimer ou créer des choses', vote: 'B' },
+      { text: 'Apprendre ou t\'informer en ligne', vote: 'C' },
+      { text: 'Te divertir et te détendre', vote: 'D' }
+    ]
+  },
+  {
+    text: 'En général, tu te sers de ton téléphone pour...',
+    options: [
+      { text: 'Rester connecté(e) avec les autres', vote: 'A' },
+      { text: 'Poster et afficher ce que tu crées', vote: 'B' },
+      { text: 'Faire partie de conversations importantes', vote: 'C' },
+      { text: 'Faire défiler ton feed et oublier ta journée', vote: 'D' }
+    ]
+  }
+];
+
+const BRANCHES = {
+  A: {
+    label: 'Social & Visibilité',
+    statements: [
+      { text: 'Je poste des photos ou des vidéos numériques de ma vie quotidienne.', scores: { diariste: 5, reseauteur: 3, connecteur: 1 } },
+      { text: 'Je préfère envoyer un texto plutôt qu\'afficher quelque chose publiquement.', scores: { connecteur: 5, diariste: 1, reseauteur: 1 } },
+      { text: 'Mon profil en ligne reflète vraiment qui je suis.', scores: { reseauteur: 5, diariste: 3, connecteur: 1 } }
+    ],
+    personas: ['connecteur', 'reseauteur', 'diariste']
+  },
+  B: {
+    label: 'Expression Créative',
+    statements: [
+      { text: 'Je consacre du temps à créer des choses pour les partager en ligne.', scores: { createur: 5, artiste: 2 } },
+      { text: 'Je crée même si personne ne voit ce que j\'enregistre ou je fais.', scores: { artiste: 5, createur: 1 } },
+      { text: 'Le nombre de vues est important pour moi quand je poste.', scores: { createur: 5, artiste: 1 } }
+    ],
+    personas: ['createur', 'artiste']
+  },
+  C: {
+    label: 'Savoir & Engagement',
+    statements: [
+      { text: 'J\'affiche mon opinion sur des sujets importants sur les réseaux sociaux.', scores: { engage: 5, geek: 1 } },
+      { text: 'Je télécharge des applis ou des outils numériques puissants pour apprendre.', scores: { geek: 5, engage: 2 } },
+      { text: 'Je consacre du temps à des causes qui font partie de mes valeurs.', scores: { engage: 5, geek: 1 } }
+    ],
+    personas: ['engage', 'geek']
+  },
+  D: {
+    label: 'Loisirs & Évasion',
+    statements: [
+      { text: 'Je me sers des jeux vidéo pour me détendre.', scores: { joueur: 5, evade: 2, viral: 1, travailleur: 0 } },
+      { text: 'Je fais défiler mon feed et j\'envoie des choses drôles à mes amis.', scores: { viral: 5, evade: 2, joueur: 1, travailleur: 0 } },
+      { text: 'J\'utilise des applis fiables pour organiser et planifier ma vie.', scores: { travailleur: 5, joueur: 1, viral: 0, evade: 0 } },
+      { text: 'Le divertissement numérique m\'aide à presque oublier ma journée.', scores: { evade: 5, viral: 2, joueur: 2, travailleur: 0 } }
+    ],
+    personas: ['evade', 'joueur', 'viral', 'travailleur']
+  }
+};
+
+// ---- STATE ----
+let phase = 1;
+let p1Index = 0;
+let bucketVotes = { A: 0, B: 0, C: 0, D: 0 };
+let currentBranch = null;
+let freqIndex = 0;
+let freqScores = {};
+let p1Selection = null;
+let freqSelections = [];
+let totalSteps = 0;
+let currentStep = 0;
+
+function startQuiz() {
+  show('screen-quiz');
+  phase = 1;
+  p1Index = 0;
+  bucketVotes = { A: 0, B: 0, C: 0, D: 0 };
+  renderPhase1();
+}
+
+function renderPhase1() {
+  const q = PHASE1[p1Index];
+  currentStep = p1Index + 1;
+  totalSteps = 2 + (currentBranch ? BRANCHES[currentBranch].statements.length : 5);
+
+  setProgress(currentStep, 7);
+  document.getElementById('qType').textContent = 'Question ' + currentStep + ' sur 2';
+  document.getElementById('qText').textContent = q.text;
+  p1Selection = null;
+  hideContinue();
+
+  const body = document.getElementById('questionBody');
+  body.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'options-grid';
+
+  q.options.forEach((opt, i) => {
+    const letters = ['A', 'B', 'C', 'D'];
+    const btn = document.createElement('button');
+    btn.className = 'option-card';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span class="opt-text">${opt.text}</span>`;
+    btn.onclick = () => {
+      document.querySelectorAll('.option-card').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      p1Selection = opt.vote;
+      showContinue();
+    };
+    grid.appendChild(btn);
+  });
+
+  body.appendChild(grid);
+}
+
+function renderFreqPhase() {
+  const branch = BRANCHES[currentBranch];
+  const statements = branch.statements;
+
+  freqSelections = new Array(statements.length).fill(null);
+  freqScores = {};
+  branch.personas.forEach(p => freqScores[p] = 0);
+
+  totalSteps = 2 + statements.length;
+  setProgress(3, totalSteps);
+
+  document.getElementById('qType').textContent = 'Réponds à chaque phrase';
+  document.getElementById('qText').textContent = branch.label + ' — ' + branch.personas.length + ' profils possibles';
+  hideContinue();
+
+  const body = document.getElementById('questionBody');
+  body.innerHTML = '';
+
+  statements.forEach((stmt, si) => {
+    const block = document.createElement('div');
+    block.className = 'freq-statement';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'freq-label';
+    lbl.textContent = stmt.text;
+    block.appendChild(lbl);
+
+    const scale = document.createElement('div');
+    scale.className = 'freq-scale';
+
+    FREQ_LABELS.forEach((label, val) => {
+      const score = val + 1;
+      const btn = document.createElement('button');
+      btn.className = 'freq-btn';
+      btn.innerHTML = `<span class="freq-num">${score}</span>${label}`;
+      btn.onclick = () => {
+        block.querySelectorAll('.freq-btn').forEach(b => {
+          b.className = 'freq-btn';
+        });
+        btn.className = `freq-btn selected-${score}`;
+        freqSelections[si] = { score, weights: stmt.scores };
+        checkFreqComplete(statements.length);
+      };
+      scale.appendChild(btn);
+    });
+
+    block.appendChild(scale);
+
+    const row = document.createElement('div');
+    row.className = 'freq-labels-row';
+    row.innerHTML = '<span class="freq-label-end">Jamais</span><span class="freq-label-end">Toujours</span>';
+    block.appendChild(row);
+
+    body.appendChild(block);
+  });
+}
+
+function checkFreqComplete(total) {
+  const allAnswered = freqSelections.every(s => s !== null);
+  if (allAnswered) showContinue();
+}
+
+function advance() {
+  if (phase === 1) {
+    bucketVotes[p1Selection]++;
+    p1Index++;
+    if (p1Index < PHASE1.length) {
+      renderPhase1();
+    } else {
+      // Determine bucket
+      const bucket = Object.entries(bucketVotes).sort((a,b) => b[1]-a[1])[0][0];
+      currentBranch = bucket;
+      phase = 2;
+      renderFreqPhase();
+    }
+  } else {
+    // Score frequency responses
+    freqSelections.forEach(sel => {
+      if (!sel) return;
+      Object.entries(sel.weights).forEach(([persona, weight]) => {
+        if (freqScores[persona] !== undefined) {
+          freqScores[persona] += sel.score * weight;
+        }
+      });
+    });
+
+    const winner = Object.entries(freqScores).sort((a,b) => b[1]-a[1])[0][0];
+    showResult(winner);
+  }
+}
+
+function showResult(personaKey) {
+  const p = PERSONAS[personaKey];
+  show('screen-result');
+
+  const card = document.getElementById('resultCard');
+  card.innerHTML = `
+    <div class="result-eyebrow">Ton profil numérique</div>
+    <span class="result-emoji">${p.emoji}</span>
+    <div class="result-name">${p.name}</div>
+    <div class="result-desc">${p.desc}</div>
+    <div class="traits-wrap">${p.traits.map(t => `<span class="trait">${t}</span>`).join('')}</div>
+    <div class="result-divider"></div>
+    <div class="glossary-section">
+      <div class="glossary-title">Glossaire · Vocabulary</div>
+      <div class="glossary-grid">
+        ${p.glossary.map(g => `<div class="glossary-item"><div class="gloss-fr">${g.fr}</div><div class="gloss-en">${g.en}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-restart" onclick="restart()">↺ Recommencer</button>
+    </div>
+  `;
+}
+
+function restart() {
+  phase = 1;
+  p1Index = 0;
+  bucketVotes = { A: 0, B: 0, C: 0, D: 0 };
+  currentBranch = null;
+  freqIndex = 0;
+  freqScores = {};
+  p1Selection = null;
+  freqSelections = [];
+  show('screen-intro');
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showContinue() {
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function hideContinue() {
+  document.getElementById('btnNext').classList.remove('visible');
+}
+
+function setProgress(current, total) {
+  const pct = Math.round((current / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Étape ${current} sur ${total}`;
+}
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
